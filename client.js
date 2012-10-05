@@ -15,8 +15,8 @@ var req_options = {
 
 
 var nums = {
-	op1: 7,
-	op2: 16
+	op1: 24,
+	op2: 6
 };
 
 var data = JSON.stringify(nums);

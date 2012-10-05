@@ -15,16 +15,15 @@ handle["multiplicar"] = operacionsAritmetiques.multiplicar;
 handle["dividir"] = operacionsAritmetiques.dividir;
 handle["expensive"] = operacionsAritmetiques.arrel;
 
-app.configure(function (){
-	app.use(restify.bodyParser());
-});
+
+app.use(restify.bodyParser());
 
 app.post("/:operation", function(request, response, next){
 	var op = handle[request.params.operation];
 
 	if(typeof op === 'function'){
-		op(	request.body.op1, 
-			request.body.op2, 
+		op(	request.params.op1, 
+			request.params.op2, 
 			function(error, resultat){
 	    			if(error){
 	    				response.json(error.errorCode, { error: error.errorDescription });
@@ -33,7 +32,7 @@ app.post("/:operation", function(request, response, next){
 	    			}
     		});
 	}else{
-		next();
+		response.json(404, {error:'404 Not Found'});
 	}
 });
 
@@ -41,8 +40,8 @@ app.get("/:operation", function (request, response, next){
 	var op = handle[request.params.operation];
 	
 	if(typeof op === 'function'){
-		op( parseInt(request.param('op1')),
-			parseInt(request.param('op2')),
+		op( parseInt(request.params.op1),
+			parseInt(request.params.op2),
 			function(error, resultat){
 				if(error){
 					response.json(error.errorCode, { error: error.errorDescription });
@@ -51,13 +50,13 @@ app.get("/:operation", function (request, response, next){
 				}
 		});
 	}else {
-		next();
+		response.json(404, {error:'404 Not Found'});
 	}
 });
 
-app.all("/*", function (request, response){
+/*app.all("/*", function (request, response){
 	response.json(404, {error:'404 Not Found'});
-});
+});*/
 
 app.listen(port,ipaddr);
 console.log("Server has started at: "+ipaddr+":"+port);
